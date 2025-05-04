@@ -1,0 +1,4 @@
+id,nome,data_criacao,ativo
+1,Ana,2022-01-01,True
+2,Bruno,2022-06-10,False
+3,Carla,2023-03-15,True

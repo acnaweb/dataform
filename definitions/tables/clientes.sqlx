@@ -1,0 +1,12 @@
+config {
+  type: "table",
+  description: "Clientes ativos com dados formatados"
+}
+
+SELECT
+  id,
+  UPPER(nome) AS nome,
+  DATE(data_criacao) AS data_criacao
+FROM
+  ${ref("raw.clientes")}
+WHERE ativo = TRUE
