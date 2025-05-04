@@ -9,10 +9,12 @@ Este projeto demonstra como criar um pipeline de transformação de dados utiliz
 
 ```plaintext
 my-dataform-project/
-├── dataform.json
+├── workflow_settings.yaml
 ├── definitions/
 │   └── tables/
 │       └── clientes.sqlx
+├── includes/
+├── package.json
 ├── python-helper/
 │   ├── requirements.txt
 │   ├── main.py
@@ -37,28 +39,33 @@ my-dataform-project/
   - `BigQuery Data Editor`
   - `Dataform Admin`
 
-### 📦 Instalar o Dataform CLI
+### 📦 Inicializar projeto com Dataform
 
 ```bash
 npm install -g @dataform/cli
+dataform init my-dataform-project
+cd my-dataform-project
 ```
 
 ---
 
-## ⚙️ Configuração do Projeto Dataform
+## ⚙️ Configuração com `workflow_settings.yaml`
 
-### `dataform.json`
+**`workflow_settings.yaml`**
 
-```json
-{
-  "warehouse": "bigquery",
-  "defaultSchema": "refined",
-  "defaultDatabase": "seu-projeto-id",
-  "assertionSchema": "tests",
-  "gcloudProjectId": "seu-projeto-id",
-  "defaultLocation": "us"
-}
+```yaml
+dataformCoreVersion: 3.0.0
+
+defaultDatabaseConfig:
+  database: seu-projeto-id
+  schema: refined
+  location: us
+
+assertionSchema: tests
+gcloudProjectId: seu-projeto-id
 ```
+
+> Substitua `seu-projeto-id` pelo ID real do seu projeto GCP.
 
 ---
 
@@ -83,7 +90,7 @@ WHERE ativo = TRUE
 
 ---
 
-## 🐍 Python para Geração e Testes Locais
+## 🐍 Python para Geração e Testes Locais com DuckDB
 
 ### Instalar Dependências
 
@@ -139,7 +146,7 @@ def test_transform_sql():
     SELECT
       id,
       UPPER(nome) AS nome,
-      DATE(data_criacao) AS data_criacao
+      CAST(data_criacao AS DATE) AS data_criacao
     FROM raw_clientes
     WHERE ativo = TRUE
     '''
@@ -161,7 +168,7 @@ if __name__ == "__main__":
 python python-helper/utils/generate_clients.py
 ```
 
-### ✅ Testar localmente
+### ✅ Testar localmente com DuckDB
 
 ```bash
 python python-helper/utils/test_transforms_duckdb.py
@@ -189,7 +196,8 @@ dataform run
 Este repositório fornece:
 - Transformações SQL com Dataform para BigQuery
 - Geração de dados e testes locais com Python + DuckDB
-- Integração simples com GCP para ambientes de produção
+- Configuração atualizada usando `workflow_settings.yaml`
+- Integração moderna com GCP para ambientes de produção
 
 ---
 
